@@ -4,9 +4,9 @@ import random
  
 pygame.init()
 
-global game_close
-global game_first
-global game_over
+game_over = False
+game_close = False
+game_first = True
 
 class colour(): 
     white = (255, 255, 255)
@@ -40,23 +40,23 @@ class game_param():
     y1_change = 0
 
 class record():
-    max = [0, 0, 0, 0, 0]
+    maxim = [0, 0, 0, 0, 0]
 
- 
+
+def table_record(value):
+    record.maxim.append(value)
+    record.maxim.sort(reverse = True)
+    del record.maxim[-1]
+
+def print_table():
+    value = font_style.render("Your Score: " + str(record.maxim[0]) + ', ' + str(record.maxim[1]) + ', ' + str(record.maxim[2]) + ', ' + str(record.maxim[3]) + ', ' + str(record.maxim[4]), True, colour.green)
+    dis.blit(value, [parameter.dis_width / 6 + 80, parameter.dis_height / 3 + 40])
+
 dis = pygame.display.set_mode((parameter.dis_width, parameter.dis_height))
 clock = pygame.time.Clock()
  
 font_style = pygame.font.SysFont("bahnschrift", 25)
 score_font = pygame.font.SysFont("comicsansms", 35)
-
-def table():
-    flag = False
-    for i in range(5):
-        if snake.snake_length - 1 >= record.max:
-            flag = True
-    if flag:
-        record.max[-1] = snake.snake_length - 1
-        record.max.sort
 
 def Your_score(score):
     value = score_font.render("Your Score: " + str(score), True, colour.yellow)
@@ -70,20 +70,6 @@ def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [parameter.dis_width / 6, parameter.dis_height / 3])
 
-def colour_of_snake():
-    print('Write w to choose white colour of snake, y - yellow, r - red, g -green, b -blue')
-    bucova = input()
-    if bucova == 'w':
-        snake.snake_colour = colour.white
-    elif bucova == 'y':
-        snake.snake_colour = colour.yellow
-    elif bucova == 'r':
-        snake.snake_colour = colour.red
-    elif bucova == 'g':
-        snake.snake_colour = colour.green
-    elif bucova == 'b':
-        snake.snake_colour = colour.blue
-
 def food_generator():
     food.colour_food = random.choice(colour.colours)
     food.foodx = round(random.randrange(0, parameter.dis_width - snake.snake_block) / 10.0) * 10.0
@@ -93,11 +79,17 @@ def loose():
     global game_close
     global game_first
     global game_over
+    flag = True
     while game_close == True:
             dis.fill(colour.blue)
             message("You Lost! Press C-Play Again or Q-Quit", colour.red)
             Your_score(snake.snake_length - 1)
+            if flag:
+                table_record(snake.snake_length - 1)
+                flag = False
+            print_table()
             pygame.display.update()
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
@@ -136,7 +128,7 @@ def gameLoop():
     game_close = False
     game_first = True
     snake_List = []
-
+    snake.snake_length = 1
     food_generator()
     #colour_of_snake()
 
