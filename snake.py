@@ -15,7 +15,17 @@ class colour():
     red = (213, 50, 80)
     green = (0, 255, 0)
     blue = (50, 153, 213)
-    colours = [white, yellow, red, green, blue]
+    pink = ((255,100,180))
+    purple = ((240,0,255))
+    rust = ((210,150,75))
+    forest_green = ((0,50,0))
+    highlighter = ((255,255,100))
+    marroon = ((115,0,0))
+    coffee_brown =((200,190,140))
+    blue_green = ((0,255,170))
+    dark_gray = ((50,50,50))
+    navy_blue = ((0,0,100))
+    colours = [white, yellow, red, green, blue, pink, purple]
 
 class parameter(): 
     dis_width = 600
@@ -24,24 +34,32 @@ class parameter():
 class snake():
     snake_block = 10
     snake_speed = 15
-    snake_colour = colour.white
-    snake_length = 1   
+    snake_colour = colour.pink
+    snake_length = 1
+    snake_List = []  
 
 class food():
     foodx = 0
     foody = 0
     colour_food = colour.green
-
-
-class game_param():
-    x1 = parameter.dis_width / 2
-    y1 = parameter.dis_height / 2
-    x1_change = 0
-    y1_change = 0
+    two = False
+    one = True
 
 class record():
     maxim = [0, 0, 0, 0, 0]
 
+class level():
+    k = [0.20, 0.25, 0.30, 0.35, 0.40]
+    fod = [20, 10, 10, 0, 0]
+    i = 0
+
+class game_param():
+    x1 = parameter.dis_width / 2
+    y1 = parameter.dis_height / 2
+    display_colour =  colour.black
+    x1_change = 0
+    y1_change = 0
+    times = snake.snake_speed * snake.snake_length * level.k[level.i]
 
 def table_record(value):
     record.maxim.append(value)
@@ -49,7 +67,7 @@ def table_record(value):
     del record.maxim[-1]
 
 def print_table():
-    value = font_style.render("Your Score: " + str(record.maxim[0]) + ', ' + str(record.maxim[1]) + ', ' + str(record.maxim[2]) + ', ' + str(record.maxim[3]) + ', ' + str(record.maxim[4]), True, colour.green)
+    value = font_style.render("Your Score: " + str(record.maxim[0]) + ', ' + str(record.maxim[1]) + ', ' + str(record.maxim[2]) + ', ' + str(record.maxim[3]) + ', ' + str(record.maxim[4]), True, colour.red)
     dis.blit(value, [parameter.dis_width / 6 + 80, parameter.dis_height / 3 + 40])
 
 dis = pygame.display.set_mode((parameter.dis_width, parameter.dis_height))
@@ -59,12 +77,12 @@ font_style = pygame.font.SysFont("bahnschrift", 25)
 score_font = pygame.font.SysFont("comicsansms", 35)
 
 def Your_score(score):
-    value = score_font.render("Your Score: " + str(score), True, colour.yellow)
+    value = score_font.render("Your Score: " + str(score), True, colour.marroon)
     dis.blit(value, [0, 0])
  
-def our_snake(snake_block, snake_list):
-    for x in snake_list:
-        pygame.draw.rect(dis, snake.snake_colour, [x[0], x[1], snake_block, snake_block])
+def our_snake():
+    for x in snake.snake_List:
+        pygame.draw.rect(dis, snake.snake_colour, [x[0], x[1], snake.snake_block, snake.snake_block])
   
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
@@ -72,8 +90,8 @@ def message(msg, color):
 
 def food_generator():
     food.colour_food = random.choice(colour.colours)
-    food.foodx = round(random.randrange(0, parameter.dis_width - snake.snake_block) / 10.0) * 10.0
-    food.foody = round(random.randrange(0, parameter.dis_height - snake.snake_block) / 10.0) * 10.0
+    food.foodx = round(random.randrange(level.fod[level.i], parameter.dis_width - snake.snake_block - level.fod[level.i]) / 10.0) * 10.0
+    food.foody = round(random.randrange(level.fod[level.i] + 55, parameter.dis_height - snake.snake_block - level.fod[level.i]) / 10.0) * 10.0
 
 def loose():
     global game_close
@@ -81,7 +99,7 @@ def loose():
     global game_over
     flag = True
     while game_close == True:
-            dis.fill(colour.blue)
+            dis.fill(colour.dark_gray)
             message("You Lost! Press C-Play Again or Q-Quit", colour.red)
             Your_score(snake.snake_length - 1)
             if flag:
@@ -116,7 +134,46 @@ def move():
                 game_param.y1_change = snake.snake_block
                 game_param.x1_change = 0
 
-def gameLoop():
+def choose_level():
+    print('Choose level from 1 to 5:')
+    levele = int(input())
+    level.i = levele - 1
+
+def colour_of_snake():
+    print('Write w to choose white colour of snake, y - yellow, r - red, g -green, b -blue')
+    bucova = input()
+    if bucova == 'w':
+        snake.snake_colour = colour.white
+    elif bucova == 'y':
+        snake.snake_colour = colour.yellow
+    elif bucova == 'r':
+        snake.snake_colour = colour.red
+    elif bucova == 'g':
+        snake.snake_colour = colour.green
+    elif bucova == 'b':
+        snake.snake_colour = colour.blue
+
+def bonus():
+    scale = snake.snake_length - 1
+    if ((scale >= 10) and (scale < 12)) or ((scale % 10 == 0) and (scale > 0)):
+        game_param.display_colour = colour.forest_green
+    elif (scale >= 10) and (scale % 15 == 0):
+        game_param.display_colour = colour.navy_blue
+    else:
+        game_param.display_colour = colour.black
+    
+    if (scale % 7 == 0) and (scale > 0):
+        game_param.times = 5
+    else:
+        game_param.times = snake.snake_speed * snake.snake_length * level.k[level.i]
+
+    if (scale % 5 == 0) and (scale > 0):
+        food.two = True
+
+def g_time():
+    game_param.times = snake.snake_speed * snake.snake_length * level.k[level.i]
+
+def start_game_parameter():
     global game_close
     global game_first
     global game_over
@@ -127,43 +184,57 @@ def gameLoop():
     game_over = False
     game_close = False
     game_first = True
-    snake_List = []
     snake.snake_length = 1
     food_generator()
+
+def check_eat():
+    if game_param.x1 == food.foodx and game_param.y1 == food.foody:
+        food_generator()
+        snake.snake_length += 1
+
+def gameLoop():
+    global game_close
+    global game_first
+    global game_over
+    snake.snake_List = []
+    start_game_parameter()
+    #choose_level()
     #colour_of_snake()
 
     while not game_over:
         loose()
         move()
-        
-        if game_param.x1 >= parameter.dis_width or game_param.x1 < 0 or game_param.y1 >= parameter.dis_height or game_param.y1 < 0:
-            game_close = True
+        bonus()
 
         game_param.x1 += game_param.x1_change
         game_param.y1 += game_param.y1_change
-        dis.fill(colour.black)
-        pygame.draw.rect(dis, food.colour_food, [food.foodx, food.foody, snake.snake_block, snake.snake_block])
         snake_Head = []
         snake_Head.append(game_param.x1)
         snake_Head.append(game_param.y1)
-        snake_List.append(snake_Head)
-        if len(snake_List) > snake.snake_length:
-            del snake_List[0]
- 
-        for x in snake_List[:-1]:
+        snake.snake_List.append(snake_Head)
+
+        dis.fill(game_param.display_colour)
+        for i in range(parameter.dis_width):
+            pygame.draw.rect(dis, colour.red, [i, 50, 2, 2])
+
+        pygame.draw.rect(dis, food.colour_food, [food.foodx, food.foody, snake.snake_block, snake.snake_block])
+        if len(snake.snake_List) > snake.snake_length:
+            del snake.snake_List[0]
+        if game_param.x1 >= parameter.dis_width or game_param.x1 < 0 or game_param.y1 >= parameter.dis_height or game_param.y1 < 60:
+            game_close = True
+        for x in snake.snake_List[:-1]:
             if x == snake_Head:
-                game_close = True
+                game_close = True 
+
  
-        our_snake(snake.snake_block, snake_List)
+        our_snake()
         Your_score(snake.snake_length - 1)
  
         pygame.display.update()
 
-        if game_param.x1 == food.foodx and game_param.y1 == food.foody:
-            food_generator()
-            snake.snake_length += 1
- 
-        clock.tick(snake.snake_speed * snake.snake_length * 0.25)
+        check_eat()
+
+        clock.tick(game_param.times)
  
     pygame.quit()
     quit()
