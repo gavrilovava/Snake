@@ -198,8 +198,8 @@ def gameLoop():
     global game_over
     snake.snake_List = []
     start_game_parameter()
-    #choose_level()
-    #colour_of_snake()
+    choose_level()
+    colour_of_snake()
 
     while not game_over:
         loose()
