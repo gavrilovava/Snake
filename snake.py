@@ -19,7 +19,6 @@ class colour():
     purple = ((240,0,255))
     rust = ((210,150,75))
     forest_green = ((0,50,0))
-    highlighter = ((255,255,100))
     marroon = ((115,0,0))
     coffee_brown =((200,190,140))
     blue_green = ((0,255,170))
