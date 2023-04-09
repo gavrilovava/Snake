@@ -140,7 +140,7 @@ def choose_level():
     level.i = levele - 1
 
 def colour_of_snake():
-    print('Write w to choose white colour of snake, y - yellow, r - red, g -green, b -blue')
+    print('Write w to choose white colour of snake, y - yellow, r - red, g -green, b -blue, p - pink')
     bucova = input()
     if bucova == 'w':
         snake.snake_colour = colour.white
@@ -152,6 +152,8 @@ def colour_of_snake():
         snake.snake_colour = colour.green
     elif bucova == 'b':
         snake.snake_colour = colour.blue
+    elif bucova == 'p':
+        snake.snake_colour = colour.pink
 
 def bonus():
     scale = snake.snake_length - 1
