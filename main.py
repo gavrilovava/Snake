@@ -1,3 +1,3 @@
-import game
+import src.game as game
 
 game.gameLoop()
