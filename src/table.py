@@ -13,5 +13,5 @@ class record():
     def print_table():
         font_style = pygame.font.SysFont("bahnschrift", const.letter_size_1)
         score_font = pygame.font.SysFont("comicsansms", const.letter_size_2)
-        value = font_style.render("Your Score: " + str(record.maxim[0]) + ', ' + str(record.maxim[1]) + ', ' + str(record.maxim[2]) + ', ' + str(record.maxim[3]) + ', ' + str(record.maxim[4]), True, colour.red)
+        value = font_style.render("Your record: " + str(record.maxim[0]) + ', ' + str(record.maxim[1]) + ', ' + str(record.maxim[2]) + ', ' + str(record.maxim[3]) + ', ' + str(record.maxim[4]), True, colour.red)
         parameter.dis.blit(value, [parameter.dis_width / const.letter_x + const.letter_delta_x, parameter.dis_height / const.letter_y + const.letter_delta_y])
